@@ -113,6 +113,7 @@ RUN conda install --quiet --yes 'tini=0.18.0' && \
 # Correct permissions
 # Do all this in a single RUN command to avoid duplicating all of the
 # files across image layers when the permissions change
+# refer this for ipyparall enable: https://ipyparallel.readthedocs.io/en/latest/index.html?highlight=serverextension#installing-ipython-parallel
 RUN conda install --quiet --yes \
     'notebook=6.0.3' \
     'jupyterhub=1.1.0' \
@@ -123,7 +124,11 @@ RUN conda install --quiet --yes \
     rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
     rm -rf /home/$NB_USER/.cache/yarn && \
     fix-permissions $CONDA_DIR && \
-    fix-permissions /home/$NB_USER
+    fix-permissions /home/$NB_USER && \
+    pip install -q ipyparallel
+#    pip install -q ipyparallel && \
+#    jupyter serverextension enable ipyparallel && \
+#    jupyter nbextension enable ipyparallel
 
 EXPOSE 8888
 
