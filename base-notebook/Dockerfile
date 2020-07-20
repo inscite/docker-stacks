@@ -31,6 +31,10 @@ RUN apt-get update \
     locales \
     fonts-liberation \
     run-one \
+    vim \
+    nano \
+    openssh-server \
+    openssh-client \
  && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
@@ -117,7 +121,8 @@ RUN conda install --quiet --yes 'tini=0.18.0' && \
 RUN conda install --quiet --yes \
     'notebook=6.0.3' \
     'jupyterhub=1.1.0' \
-    'jupyterlab=2.1.5' && \
+    'jupyterlab=2.1.5' \
+    'openmpi=4.0.4' && \
     conda clean --all -f -y && \
     npm cache clean --force && \
     jupyter notebook --generate-config && \
@@ -125,7 +130,9 @@ RUN conda install --quiet --yes \
     rm -rf /home/$NB_USER/.cache/yarn && \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER && \
-    pip install -q ipyparallel
+    pip install -q ipyparallel && \
+    ipython profile create --parallel --profile=mpi && \
+    echo "c.IPClusterStart.controller_launcher_class = 'MPIControllerLauncher'" >> /home/$NB_USER/.ipython/profile_mpi/ipcluster_config.py
 #    pip install -q ipyparallel && \
 #    jupyter serverextension enable ipyparallel && \
 #    jupyter nbextension enable ipyparallel
