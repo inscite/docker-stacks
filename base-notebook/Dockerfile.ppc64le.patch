@@ -64,7 +64,7 @@
  # Configure environment
  ENV CONDA_DIR /opt/conda
 @@ -59,25 +65,26 @@
- # Install conda as jovyan
+ # Install conda as dataon
  RUN cd /tmp && \
      mkdir -p $CONDA_DIR && \
 -    wget --quiet https://repo.continuum.io/miniconda/Miniconda3-4.2.12-Linux-x86_64.sh && \
