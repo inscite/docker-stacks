@@ -50,7 +50,13 @@ distinguished_name = req_distinguished_name
     os.chmod(pem_file, stat.S_IRUSR | stat.S_IWUSR)
     c.NotebookApp.certfile = pem_file
 
-# Change default umask for all subprocesses of the notebook server if set in
-# the environment
+# Change default umask for all subprocesses of the notebook server if set in the environment
 if 'NB_UMASK' in os.environ:
     os.umask(int(os.environ['NB_UMASK'], 8))
+
+# extension for dynamic conda-env kernel import
+# conda package 'ipykernel' must be installed per each env.
+# reference: https://github.com/Anaconda-Platform/nb_conda_kernels
+c.NotebookApp.kernel_spec_manager_class = 'nb_conda_kernels.CondaKernelSpecManager'
+#c.CondaKernelSpecManager.env_filter = '^(?!root$|base$).*'
+c.CondaKernelSpecManager.name_format = '{1} [{0}/conda:env]'

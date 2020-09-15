@@ -9,7 +9,8 @@ ARG ROOT_CONTAINER=ubuntu:focal-20200606@sha256:93fd0705706e5bdda6cc450b384d8d5a
 ARG BASE_CONTAINER=$ROOT_CONTAINER
 FROM $BASE_CONTAINER
 
-LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
+#LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
+LABEL maintainer="Seungkyun Hong <nah@kakao.com>"
 ARG NB_USER="dataon"
 ARG NB_UID="1000"
 ARG NB_GID="100"
@@ -35,6 +36,9 @@ RUN apt-get update \
     nano \
     openssh-server \
     openssh-client \
+    screen \
+    htop \
+    nload \
  && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
@@ -85,7 +89,10 @@ ENV MINICONDA_VERSION=4.8.3 \
     CONDA_VERSION=4.8.3
 
 WORKDIR /tmp
-RUN wget --quiet https://repo.continuum.io/miniconda/Miniconda3-py38_${MINICONDA_VERSION}-Linux-x86_64.sh && \
+#ADD ./condarepo/Miniconda3-py38_${MINICONDA_VERSION}-Linux-x86_64.sh /tmp/
+#RUN wget --quiet https://repo.continuum.io/miniconda/Miniconda3-py38_${MINICONDA_VERSION}-Linux-x86_64.sh && \
+#RUN wget --quiet --no-check-certificate https://io.zyn.kr/miniconda/Miniconda3-py38_${MINICONDA_VERSION}-Linux-x86_64.sh && \
+RUN wget --quiet --no-check-certificate https://dev.zyn.kr/miniconda/Miniconda3-py38_${MINICONDA_VERSION}-Linux-x86_64.sh && \
     echo "${MINICONDA_MD5} *Miniconda3-py38_${MINICONDA_VERSION}-Linux-x86_64.sh" | md5sum -c - && \
     /bin/bash Miniconda3-py38_${MINICONDA_VERSION}-Linux-x86_64.sh -f -b -p $CONDA_DIR && \
     rm Miniconda3-py38_${MINICONDA_VERSION}-Linux-x86_64.sh && \
@@ -102,6 +109,12 @@ RUN wget --quiet https://repo.continuum.io/miniconda/Miniconda3-py38_${MINICONDA
     conda clean --all -f -y && \
     rm -rf /home/$NB_USER/.cache/yarn && \
     fix-permissions $CONDA_DIR && \
+    fix-permissions /home/$NB_USER
+
+# further local directory for external miniconda envs mount
+RUN mkdir /home/$NB_USER/miniconda3 && \
+    ln -s /opt/conda/subenvs /home/$NB_USER/miniconda3/envs && \
+    ln -s /mnt/scratch /home/$NB_USER/scratch && \
     fix-permissions /home/$NB_USER
 
 # Install Tini
@@ -122,20 +135,21 @@ RUN conda install --quiet --yes \
     'notebook=6.0.3' \
     'jupyterhub=1.1.0' \
     'jupyterlab=2.1.5' \
-    'openmpi=4.0.4' && \
+    'openmpi=4.0.4' \
+    'nb_conda_kernels' && \
     conda clean --all -f -y && \
     npm cache clean --force && \
     jupyter notebook --generate-config && \
     rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
     rm -rf /home/$NB_USER/.cache/yarn && \
-    fix-permissions $CONDA_DIR && \
-    fix-permissions /home/$NB_USER && \
     pip install -q ipyparallel && \
     ipython profile create --parallel --profile=mpi && \
-    echo "c.IPClusterStart.controller_launcher_class = 'MPIControllerLauncher'" >> /home/$NB_USER/.ipython/profile_mpi/ipcluster_config.py
-#    pip install -q ipyparallel && \
-#    jupyter serverextension enable ipyparallel && \
-#    jupyter nbextension enable ipyparallel
+    echo "c.IPClusterStart.controller_launcher_class = 'MPIControllerLauncher'" \
+    >> /home/$NB_USER/.ipython/profile_mpi/ipcluster_config.py && \
+    echo "colorscheme delek" >> /home/$NB_USER/.vimrc && \
+    conda init bash && \
+    fix-permissions $CONDA_DIR && \
+    fix-permissions /home/$NB_USER 
 
 EXPOSE 8888
 
