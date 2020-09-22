@@ -1,0 +1,29 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: condaenv-exporter
+spec:
+  template:
+    spec:
+      containers:
+      - name: condaenv-exporter
+        image: dataon.kr/condaenv-exporter:0.1
+        volumeMounts:
+        - name: conda-pubenvs
+          mountPath: /opt/conda/pubenvs
+        - name: conda-usrenvs
+          mountPath: /opt/conda/usrenvs
+        env:
+        - name: NB_USER
+          value: $NB_USER
+        - name: NB_UID
+          value: $NB_UID
+        - name: NB_GID
+          value: $NB_GID
+        - name: SRCENVNAME
+          value: $SRCENVNAME
+        - name: DSTENVNAME
+          value: $DSTENVNAME
+        - name: EXPORTMODE
+          value: $EXPORTMODE
+      restartPolicy: Never
