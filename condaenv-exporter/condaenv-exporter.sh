@@ -12,10 +12,10 @@ export DSTENVNAME=$6
 
 export BASE_YAML="job-condaenv-exporter.yaml"
 
-sed -e 's/\$NB_USER/'"${NB_USER}"'/g;' \
-    -e 's/\$NB_UID/'"${NB_UID}"'/g;' \
-    -e 's/\$NB_GID/'"${NB_GID}"'/g;' \
-    -e 's/\$EXPORTMODE/'"${EXPORTMODE}"'/g;' \
-    -e 's/\$SRCENVNAME/'"${SRCENVNAME}"'/g;' \
-    -e 's/\$DSTENVNAME/'"${DSTENVNAME}"'/g;' \
-    $BASE_YAML 
+sed -e 's/\$NB_USER/"'"${NB_USER}"'"/g;' \
+    -e 's/\$NB_UID/"'"${NB_UID}"'"/g;' \
+    -e 's/\$NB_GID/"'"${NB_GID}"'"/g;' \
+    -e 's/\$EXPORTMODE/"'"${EXPORTMODE}"'"/g;' \
+    -e 's/\$SRCENVNAME/"'"${SRCENVNAME}"'"/g;' \
+    -e 's/\$DSTENVNAME/"'"${DSTENVNAME}"'"/g;' \
+    $BASE_YAML | kubectl apply -f -

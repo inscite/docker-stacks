@@ -20,10 +20,10 @@ spec:
           value: $NB_UID
         - name: NB_GID
           value: $NB_GID
+        - name: EXPORTMODE
+          value: $EXPORTMODE
         - name: SRCENVNAME
           value: $SRCENVNAME
         - name: DSTENVNAME
           value: $DSTENVNAME
-        - name: EXPORTMODE
-          value: $EXPORTMODE
       restartPolicy: Never
