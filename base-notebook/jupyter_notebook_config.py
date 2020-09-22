@@ -12,6 +12,7 @@ c.NotebookApp.ip = '0.0.0.0'
 c.NotebookApp.port = 8888
 c.NotebookApp.open_browser = False
 c.NotebookApp.default_url = '/lab'
+c.NotebookApp.notebook_dir = os.path.join('/home', os.environ['NB_USER'], 'workspace')
 
 # https://github.com/jupyter/notebook/issues/3130
 c.FileContentsManager.delete_to_trash = False

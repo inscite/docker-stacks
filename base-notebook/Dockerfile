@@ -34,11 +34,13 @@ RUN apt-get update \
     run-one \
     vim \
     nano \
+    less \
     openssh-server \
     openssh-client \
     screen \
     htop \
     nload \
+    quota \
  && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
@@ -80,8 +82,8 @@ WORKDIR $HOME
 ARG PYTHON_VERSION=default
 
 # Setup work directory for backward-compatibility
-RUN mkdir /home/$NB_USER/work && \
-    fix-permissions /home/$NB_USER
+#RUN mkdir /home/$NB_USER/work && \
+#    fix-permissions /home/$NB_USER
 
 # Install conda as dataon and check the md5 sum provided on the download site
 ENV MINICONDA_VERSION=4.8.3 \
@@ -113,8 +115,8 @@ RUN wget --quiet --no-check-certificate https://dev.zyn.kr/miniconda/Miniconda3-
 
 # further local directory for external miniconda envs mount
 RUN mkdir /home/$NB_USER/miniconda3 && \
-    ln -s /opt/conda/subenvs /home/$NB_USER/miniconda3/envs && \
-    ln -s /mnt/scratch /home/$NB_USER/scratch && \
+    ln -s /opt/conda/usrenvs /home/$NB_USER/miniconda3/envs && \
+    ln -s /mnt/workspace /home/$NB_USER/workspace && \
     fix-permissions /home/$NB_USER
 
 # Install Tini
