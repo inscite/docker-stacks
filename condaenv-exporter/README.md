@@ -40,11 +40,11 @@ $ condaenv-exporter.sh <SU_USR> <SU_UID> <SU_GID> <EXPORTMODE> <SRCENVNAME> <DST
 * **SU_UID**: uid (user-id) of subtituting user
 * **SU_GID**: gid (group-id) of subtituting user
 * **EXPORTMODE**: runtime mode of this tool
- * **VERIFY**: testing and verification of condaenv export on temporary location
- * **EXPORT**: actual condaenv export (no verification mode of VERIFY)
- * **QUERYENVS**: same as `conda env list` with user-condaenv substitution
- * **QUERYPKGS**: same as `conda list -n <env>` with user-condaenv substitution
- * **WETRUN**: command execution (similar with `su -c`) with user-condaenv substitution
+  * **VERIFY**: testing and verification of condaenv export on temporary location
+  * **EXPORT**: actual condaenv export (no verification mode of VERIFY)
+  * **QUERYENVS**: same as `conda env list` with user-condaenv substitution
+  * **QUERYPKGS**: same as `conda list -n <env>` with user-condaenv substitution
+  * **WETRUN**: command execution (similar with `su -c`) with user-condaenv substitution
 * **SRCENVNAME**: source condaenv name
 * **DSTENVNAME**: destination condaenv name (for environment export)
 * **WETRUNARGS**: arguments for user-condaenv substitution **(only used for EXPORTMODE: WETRUN)**
