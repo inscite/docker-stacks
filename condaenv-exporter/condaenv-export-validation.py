@@ -20,7 +20,7 @@ def main():
 
     # 00. get-prefix
     prefix_info = {}
-    prefix_src = subprocess.run("conda info --envs".split(' '), capture_output=True)
+    prefix_src = subprocess.run("conda env list".split(' '), capture_output=True)
     for env in prefix_src.stdout.decode('utf-8').strip().split('\n'):
         if env.startswith('#') or env.startswith('base'):
             pass

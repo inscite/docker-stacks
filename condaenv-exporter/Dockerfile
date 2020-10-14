@@ -155,7 +155,7 @@ RUN conda clean --all -f -y && \
 # Copy local files as late as possible to avoid cache busting
 #COPY start.sh start-cmd.sh /usr/local/bin/
 COPY bootstrap.sh /usr/local/bin/
-COPY chk_py_ver.py condaenv-export-validation.py /opt/
+COPY chk_py_ver.py condaenv-export-validation.py condaenv-adapter.py /opt/
 #COPY jupyter_notebook_config.py /etc/jupyter/
 
 # Fix permissions on /etc/jupyter as root
