@@ -16,11 +16,16 @@ export WETRUNARGS=$7
 
 export BASE_YAML="job-condaenv-exporter.yaml"
 
-sed -e 's/\$NB_USER/"'"${SU_USR}"'"/g;' \
-    -e 's/\$NB_UID/"'"${SU_UID}"'"/g;' \
-    -e 's/\$NB_GID/"'"${SU_GID}"'"/g;' \
-    -e 's/\$EXPORTMODE/"'"${EXPORTMODE}"'"/g;' \
-    -e 's/\$SRCENVNAME/"'"${SRCENVNAME}"'"/g;' \
-    -e 's/\$DSTENVNAME/"'"${DSTENVNAME}"'"/g;' \
-    -e 's/\$WETRUNARGS/"'"${WETRUNARGS}"'"/g;' \
+# using ASCII unit separator as delimiter
+DLM=$'\037'
+DQO='"'
+
+sed -e "s${DLM}\$NB_USER${DLM}${DQO}${SU_USR}${DQO}${DLM}g;" \
+    -e "s${DLM}\$SU_USR_HOME${DLM}${SU_USR}${DLM}g;" \
+    -e "s${DLM}\$NB_UID${DLM}${DQO}${SU_UID}${DQO}${DLM}g;" \
+    -e "s${DLM}\$NB_GID${DLM}${DQO}${SU_GID}${DQO}${DLM}g;" \
+    -e "s${DLM}\$EXPORTMODE${DLM}${DQO}${EXPORTMODE}${DQO}${DLM}g;" \
+    -e "s${DLM}\$SRCENVNAME${DLM}${DQO}${SRCENVNAME}${DQO}${DLM}g;" \
+    -e "s${DLM}\$DSTENVNAME${DLM}${DQO}${DSTENVNAME}${DQO}${DLM}g;" \
+    -e "s${DLM}\$WETRUNARGS${DLM}${DQO}${WETRUNARGS}${DQO}${DLM}g;" \
     $BASE_YAML | kubectl apply -f -

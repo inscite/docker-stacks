@@ -7,7 +7,7 @@ spec:
     spec:
       containers:
       - name: condaenv-exporter
-        image: registry.zyn.kr:6543/dataon.kr/condaenv-exporter:0.2
+        image: kisti.rdp/dataon.kr/condaenv-exporter:0.2
         volumeMounts:
         - name: conda-pubenvs
           mountPath: /opt/conda/pubenvs
@@ -30,11 +30,11 @@ spec:
           value: $WETRUNARGS
       volumes:
       - name: conda-pubenvs
-        nfs:
-          server: ipa-k1805.zyn.kr
-          path: /home/xo/miniconda3/tmp
+        hostPath:
+          path: /mnt/share/lustre/Canvas/pubs/envs
+          type: Directory
       - name: conda-usrenvs
-        nfs:
-          server: ipa-k1805.zyn.kr
-          path: /home/xo/miniconda3/envs
+        hostPath:
+          path: /mnt/share/lustre/user/$SU_USR_HOME/.usrenvs
+          type: Directory
       restartPolicy: Never
