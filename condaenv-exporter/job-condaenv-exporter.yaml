@@ -15,6 +15,8 @@ spec:
           mountPath: /opt/conda/usrenvs
         - name: workspace
           mountPath: /mnt/workspace
+        - name: lustre
+          mountPath: /mnt/share/lustre
         env:
         - name: EXPORTMODE
           value: $EXPORTMODE
@@ -42,5 +44,9 @@ spec:
       - name: workspace
         hostPath:
           path: /mnt/share/lustre/user/$SU_USR_HOME
+          type: Directory
+      - name: lustre
+        hostPath:
+          path: /mnt/share/lustre
           type: Directory
       restartPolicy: Never
