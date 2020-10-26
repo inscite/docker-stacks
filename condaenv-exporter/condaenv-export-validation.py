@@ -135,7 +135,7 @@ def main():
     except (subprocess.SubprocessError, subprocess.CalledProcessError) as e:
         py_src.update({
             "stdout": "py-chk-src-err",
-            "stderr": "[E] error occurred while retrieving pychk-src\nExec: {:}\n{:}".format(py_src["cmd"], str(e)),,
+            "stderr": "[E] error occurred while retrieving pychk-src\nExec: {:}\n{:}".format(py_src["cmd"], str(e)),
         })
 
     try:
