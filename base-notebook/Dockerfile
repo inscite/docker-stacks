@@ -77,6 +77,10 @@ RUN echo "auth requisite pam_deny.so" >> /etc/pam.d/su && \
     fix-permissions $HOME && \
     fix-permissions $CONDA_DIR
 
+# explicit lustre mountpoint for apps compatibility
+RUN mkdir -p /mnt/share/lustre && \
+    chmod -R 777 /mnt/share/lustre
+
 USER $NB_UID
 WORKDIR $HOME
 ARG PYTHON_VERSION=default
@@ -118,10 +122,6 @@ RUN mkdir /home/$NB_USER/miniconda3 && \
     ln -s /opt/conda/usrenvs /home/$NB_USER/miniconda3/envs && \
     ln -s /mnt/workspace /home/$NB_USER/workspace && \
     fix-permissions /home/$NB_USER
-
-# explicit lustre mountpoint for apps compatibility
-RUN mkdir -p /mnt/share/lustre && \
-    chmod -R 777 /mnt/share/lustre
 
 # Install Tini
 RUN conda install --quiet --yes 'tini=0.18.0' && \
