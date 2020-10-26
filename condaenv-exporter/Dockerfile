@@ -78,6 +78,10 @@ RUN echo "auth requisite pam_deny.so" >> /etc/pam.d/su && \
     fix-permissions $HOME && \
     fix-permissions $CONDA_DIR
 
+# explicit lustre mountpoint for apps compatibility
+RUN mkdir -p /mnt/share/lustre && \
+    chmod -R 777 /mnt/share/lustre
+
 USER $NB_UID
 WORKDIR $HOME
 ARG PYTHON_VERSION=default
