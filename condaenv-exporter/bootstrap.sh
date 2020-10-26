@@ -26,7 +26,7 @@ elif [ "${EXPORTMODE}" == "QUERYENVS" ]; then
 elif [ "${EXPORTMODE}" == "QUERYPKGS" ]; then
     su -c "${CONDAEVAL};python /opt/condaenv-adapter.py conda list -n ${SRCENVNAME};" $NB_USER
 elif [ "${EXPORTMODE}" == "WETRUN" ]; then
-    su -c "${CONDAEVAL};python /opt/condaenv-adapter.py "'${WETRUNARGS};' $NB_USER
+    su -c "${CONDAEVAL};conda activate ${SRCENVNAME};python /opt/condaenv-adapter.py "'${WETRUNARGS};' $NB_USER
 else
     echo 
 fi
