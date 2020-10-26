@@ -7,12 +7,14 @@ spec:
     spec:
       containers:
       - name: condaenv-exporter
-        image: kisti.rdp/dataon.kr/condaenv-exporter:0.2
+        image: kisti.rdp/dataon.kr/condaenv-exporter:0.3
         volumeMounts:
         - name: conda-pubenvs
           mountPath: /opt/conda/pubenvs
         - name: conda-usrenvs
           mountPath: /opt/conda/usrenvs
+        - name: workspace
+          mountPath: /mnt/workspace
         env:
         - name: EXPORTMODE
           value: $EXPORTMODE
@@ -36,5 +38,9 @@ spec:
       - name: conda-usrenvs
         hostPath:
           path: /mnt/share/lustre/user/$SU_USR_HOME/.usrenvs
+          type: Directory
+      - name: workspace
+        hostPath:
+          path: /mnt/share/lustre/user/$SU_USR_HOME
           type: Directory
       restartPolicy: Never

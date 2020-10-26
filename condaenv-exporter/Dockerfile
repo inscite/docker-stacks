@@ -117,7 +117,7 @@ RUN wget --quiet --no-check-certificate https://dev.zyn.kr/miniconda/Miniconda3-
 # further local directory for external miniconda envs mount
 RUN mkdir /home/$NB_USER/miniconda3 && \
     ln -s /opt/conda/usrenvs /home/$NB_USER/miniconda3/envs && \
-#    ln -s /mnt/workspace /home/$NB_USER/workspace && \
+    ln -s /mnt/workspace /home/$NB_USER/workspace && \
     fix-permissions /home/$NB_USER
 
 # Install Tini
