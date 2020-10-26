@@ -9,11 +9,11 @@ def main():
 
     if len(sys.argv) > 1:
         try:
-            subproc = subprocess.run(sys.argv[1:], capture_output=True, check=True)
+            subproc = subprocess.run(sys.argv[1:], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             print(subproc.stdout.decode('UTF-8'), file=sys.stdout)
             print(subproc.stderr.decode('UTF-8'), file=sys.stderr)
         except (subprocess.SubprocessError, subprocess.CalledProcessError) as e:
-            print("[E] error occurred while running: {:}".format(str(sys.argv[1:])))
+            print("[E] error occurred while running:\nExec: {:}\n{:}".format(str(sys.argv[1:]), str(e)))
     else:
         pass
 

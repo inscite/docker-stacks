@@ -35,7 +35,8 @@ def main():
     condaenv_dst = {"cmd": "conda list -n {:}".format(DSTENVNAME).split(' ')}
 
     try:
-        condaenv_src.update({"proc": subprocess.run(condaenv_src["cmd"], capture_output=True)})
+#        condaenv_src.update({"proc": subprocess.run(condaenv_src["cmd"], capture_output=True)})
+        condaenv_src.update({"proc": subprocess.run(condaenv_src["cmd"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)})
         condaenv_src.update({
             "stdout": condaenv_src["proc"].stdout.decode("utf-8").strip(),
             "stderr": condaenv_src["proc"].stderr.decode("utf-8").strip(),
@@ -47,7 +48,8 @@ def main():
         })
     
     try:
-        condaenv_dst.update({"proc": subprocess.run(condaenv_dst["cmd"], capture_output=True)})
+#        condaenv_dst.update({"proc": subprocess.run(condaenv_dst["cmd"], capture_output=True)})
+        condaenv_dst.update({"proc": subprocess.run(condaenv_dst["cmd"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)})
         condaenv_dst.update({
             "stdout": condaenv_dst["proc"].stdout.decode("utf-8").strip(),
             "stderr": condaenv_dst["proc"].stderr.decode("utf-8").strip(),
@@ -81,7 +83,8 @@ def main():
     pip_dst = {"cmd": "{:}/bin/pip freeze".format(prefix_info[DSTENVNAME]).split(' ')}
 
     try:
-        pip_src.update({"proc": subprocess.run(pip_src["cmd"], capture_output=True)})
+#        pip_src.update({"proc": subprocess.run(pip_src["cmd"], capture_output=True)})
+        pip_src.update({"proc": subprocess.run(pip_src["cmd"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)})
         pip_src.update({
             "stdout": pip_src["proc"].stdout.decode("utf-8").strip(),
             "stderr": pip_src["proc"].stderr.decode("utf-8").strip(),
@@ -93,7 +96,8 @@ def main():
         })
 
     try:
-        pip_dst.update({"proc": subprocess.run(pip_dst["cmd"], capture_output=True)})
+#        pip_dst.update({"proc": subprocess.run(pip_dst["cmd"], capture_output=True)})
+        pip_dst.update({"proc": subprocess.run(pip_dst["cmd"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)})
         pip_dst.update({
             "stdout": pip_dst["proc"].stdout.decode("utf-8").strip(),
             "stderr": pip_dst["proc"].stderr.decode("utf-8").strip(),
@@ -127,7 +131,8 @@ def main():
     py_dst = {"cmd": "{:}/bin/python /opt/chk_py_ver.py".format(prefix_info[DSTENVNAME]).split(' ')}
 
     try:
-        py_src.update({"proc": subprocess.run(py_src["cmd"], capture_output=True)})
+#        py_src.update({"proc": subprocess.run(py_src["cmd"], capture_output=True)})
+        py_src.update({"proc": subprocess.run(py_src["cmd"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)})
         py_src.update({
             "stdout": py_src["proc"].stdout.decode("utf-8").strip(),
             "stderr": py_src["proc"].stderr.decode("utf-8").strip(),
@@ -139,7 +144,8 @@ def main():
         })
 
     try:
-        py_dst.update({"proc": subprocess.run(py_dst["cmd"], capture_output=True)})
+#        py_dst.update({"proc": subprocess.run(py_dst["cmd"], capture_output=True)})
+        py_dst.update({"proc": subprocess.run(py_dst["cmd"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)})
         py_dst.update({
             "stdout": py_dst["proc"].stdout.decode("utf-8").strip(),
             "stderr": py_dst["proc"].stderr.decode("utf-8").strip(),
