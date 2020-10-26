@@ -119,6 +119,10 @@ RUN mkdir /home/$NB_USER/miniconda3 && \
     ln -s /mnt/workspace /home/$NB_USER/workspace && \
     fix-permissions /home/$NB_USER
 
+# explicit lustre mountpoint for apps compatibility
+RUN mkdir -p /mnt/share/lustre && \
+    chmod -R 777 /mnt/share/lustre
+
 # Install Tini
 RUN conda install --quiet --yes 'tini=0.18.0' && \
     conda list tini | grep tini | tr -s ' ' | cut -d ' ' -f 1,2 >> $CONDA_DIR/conda-meta/pinned && \
