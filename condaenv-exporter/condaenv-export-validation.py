@@ -21,6 +21,7 @@ def main():
     # 00. get-prefix
     prefix_info = {}
     prefix_src = subprocess.run("conda env list".split(' '), capture_output=True)
+    print("[D] conda env list:\n{:}".format(prefix_src.stdout.decode("utf-8")))
     for env in prefix_src.stdout.decode('utf-8').strip().split('\n'):
         if env.startswith('#') or env.startswith('base'):
             pass
@@ -53,7 +54,7 @@ def main():
         })
     except (subprocess.SubprocessError, subprocess.CalledProcessError) as e:
         condaenv_dst.update({
-            "stdout": ""
+            "stdout": "",
 	    "stderr": "[E] error occurred while retrieving condaenv-dst\nExec: {:}\n{:}".format(condaenv_dst["cmd"], str(e)),
         })
 
