@@ -7,6 +7,7 @@ import subprocess
 
 def main():
 
+    print("Exec: {:}".format(str(sys.argv)))
     if len(sys.argv) > 1:
         try:
             subproc = subprocess.run(sys.argv[1:], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding="UTF-8")
