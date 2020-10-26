@@ -13,7 +13,7 @@ def main():
             print(subproc.stdout.decode('UTF-8'), file=sys.stdout)
             print(subproc.stderr.decode('UTF-8'), file=sys.stderr)
         except (subprocess.SubprocessError, subprocess.CalledProcessError) as e:
-            print("[E] error occurred while running: {:}".format(str(sys.argv[1:)))
+            print("[E] error occurred while running: {:}".format(str(sys.argv[1:])))
     else:
         pass
 
