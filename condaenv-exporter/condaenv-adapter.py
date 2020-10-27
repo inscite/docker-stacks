@@ -1,5 +1,6 @@
+import os
 import sys
-import subprocess
+from subprocess import run as sprun, PIPE as spPIPE, SubprocessError, CalledProcessError
 from functools import partial
 
 """Copyright (c) 2020 Seungkyun Hong. <nah@kakao.com>
@@ -10,13 +11,25 @@ from functools import partial
 def main():
 
     print("Exec: {:}".format(str(sys.argv)))
+    try:
+        logfile_path = os.environ['LOGFILE']
+    except KeyError:
+        logfile_path = None
+    print("os.environ['LOGFILE']: {:}".format(logfile_path))
+
     if len(sys.argv) > 1:
         try:
-            fn_subproc = partial(subprocess.run, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding='UTF-8')
+            fn_subproc = partial(sprun, check=True, stdout=spPIPE, stderr=spPIPE, encoding='UTF-8')
             subproc = fn_subproc(sys.argv[1:])
             print("[D] STDOUT:\n{:}".format(subproc.stdout))
             print("[D] STDERR:\n{:}".format(subproc.stderr))
-        except (subprocess.SubprocessError, subprocess.CalledProcessError) as e:
+
+            if logfile_path is not None:
+                with open(logfile_path, mode='w') as f:
+                    f.write(subproc.stdout)
+                    f.flush()
+                    f.close()
+        except (SubprocessError, CalledProcessError) as e:
             print("[E] error occurred while running:\nExec: {:}\n{:}".format(str(sys.argv[1:]), str(e)))
     else:
         pass
