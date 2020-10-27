@@ -24,7 +24,7 @@ def main():
             print("[D] STDOUT:\n{:}".format(subproc.stdout))
             print("[D] STDERR:\n{:}".format(subproc.stderr))
 
-            if logfile_path is not None:
+            if logfile_path is not None or logfile_path != '-':
                 with open(logfile_path, mode='w') as f:
                     f.write(subproc.stdout)
                     f.flush()
