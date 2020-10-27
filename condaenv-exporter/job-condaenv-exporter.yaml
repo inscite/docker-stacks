@@ -32,6 +32,8 @@ spec:
           value: $DSTENVNAME
         - name: WETRUNARGS
           value: $WETRUNARGS
+        - name: LOGFILE
+          value: $WETRUNLOGF
       volumes:
       - name: conda-pubenvs
         hostPath:

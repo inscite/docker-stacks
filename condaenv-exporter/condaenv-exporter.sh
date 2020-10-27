@@ -13,6 +13,7 @@ export EXPORTMODE=$4
 export SRCENVNAME=$5
 export DSTENVNAME=$6
 export WETRUNARGS=$7
+export WETRUNLOGF=$8
 
 export BASE_YAML="job-condaenv-exporter.yaml"
 
@@ -28,4 +29,5 @@ sed -e "s${DLM}\$NB_USER${DLM}${DQO}${SU_USR}${DQO}${DLM}g;" \
     -e "s${DLM}\$SRCENVNAME${DLM}${DQO}${SRCENVNAME}${DQO}${DLM}g;" \
     -e "s${DLM}\$DSTENVNAME${DLM}${DQO}${DSTENVNAME}${DQO}${DLM}g;" \
     -e "s${DLM}\$WETRUNARGS${DLM}${DQO}${WETRUNARGS}${DQO}${DLM}g;" \
+    -e "s${DLM}\$WETRUNLOGF${DLM}${DQO}${WETRUNLOGF}${DQO}${DLM}g;" \
     $BASE_YAML | kubectl apply -f -
