@@ -7,7 +7,7 @@ spec:
     spec:
       containers:
       - name: condaenv-exporter
-        image: kisti.rdp/dataon.kr/condaenv-exporter:0.3.2
+        image: kisti.rdp/dataon.kr/condaenv-exporter:0.3.3
         volumeMounts:
         - name: conda-pubenvs
           mountPath: /opt/conda/pubenvs
@@ -37,7 +37,7 @@ spec:
         - name: LAP
           value: "FALSE"
         - name: CONDA_DEFAULT_THREADS
-          value: "10"
+          value: "12"
       volumes:
       - name: conda-pubenvs
         hostPath:
