@@ -92,7 +92,7 @@ $ condaenv-exporter.sh xo 606200001 606300000 WETRUN meta02 - "python -V"
 * 0.3.2 *(bypass)* 1a50be5a : multi-threaded tasking in conda internals
 * 0.3 (baseline) 08b0346b : baseline for beta showcase
 ---
-##Only for fun
+## Only for fun
 ###  Launch demo condaenv-exporter instance with current user
 ```console
 ./condaenv-exporter.sh $(whoami) $(id -u) $(id -g) VERIFY <srcenvname> <dstenvname>
