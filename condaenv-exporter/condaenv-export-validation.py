@@ -137,7 +137,12 @@ def main():
 
     # 04. aggregation
     chkAgg = chk01 and chk02 and chk03
-    print("valid-condaenv-clone?{:}".format(chkAgg))
+    chkAgg_out = "valid-condaenv-clone?{:}".format(chkAgg)
+    #print(chkAgg_out)
+    with open('/tmp/verification.out', 'w') as f:
+        f.write("{:}\n".format(chkAgg_out))
+        f.flush()
+        f.close()
 
     sys.exit(0)
     return

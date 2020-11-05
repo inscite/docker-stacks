@@ -32,10 +32,6 @@ fi
 if [ "${EXPORTMODE}" == "VERIFY" ]; then
     ${EXECMD} "${CONDAEVAL};"'conda create --clone "$SRCENVNAME" -p /opt/conda/pubenvs/"${DSTENVNAME}";' $NB_USER
     ${EXECMD} "${CONDAEVAL};python /opt/condaenv-export-validation.py ${SRCENVNAME} ${DSTENVNAME};" $NB_USER
-    #${EXECMD} "find /opt/conda/pubenvs/${DSTENVNAME} -type f | parallel --no-notice 'rm -f {};'" $NB_USER
-    #${EXECMD} "find /opt/conda/pubenvs/${DSTENVNAME} -type d | parallel --no-notice 'rm -rf {};' >/dev/null 2>&1 || true" $NB_USER
-    #${EXECMD} "find /opt/conda/pubenvs/${DSTENVNAME} | parallel --no-notice 'rm -rf {};'" $NB_USER # worst
-    #${EXECMD} "rm -rf /opt/conda/pubenvs/${DSTENVNAME};" $NB_USER
     while :;
     do
         [ ! -d "/opt/conda/pubenvs/${DSTENVNAME}" ] && break
@@ -43,6 +39,8 @@ if [ "${EXPORTMODE}" == "VERIFY" ]; then
         ${EXECMD} "rm -rf /opt/conda/pubenvs/${DSTENVNAME};" $NB_USER
         sleep 1
     done
+    echo "----------"
+    cat "/tmp/verification.out"
 elif [ "${EXPORTMODE}" == "EXPORT" ]; then
     ${EXECMD} "${CONDAEVAL};"'conda create --clone "$SRCENVNAME" -p /opt/conda/pubenvs/"${DSTENVNAME}";' $NB_USER
 elif [ "${EXPORTMODE}" == "QUERYENVS" ]; then
