@@ -43,6 +43,7 @@ RUN apt-get update \
     nload \
     quota \
     time \
+    parallel \
  && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
@@ -109,7 +110,7 @@ RUN wget --quiet --no-check-certificate https://dev.zyn.kr/miniconda/Miniconda3-
     conda config --system --set auto_update_conda false && \
     conda config --system --set show_channel_urls true && \
     conda config --system --set channel_priority strict && \
-    conda config --system --set default_threads 10 && \
+    conda config --system --set default_threads 8 && \
     if [ ! $PYTHON_VERSION = 'default' ]; then conda install --yes python=$PYTHON_VERSION; fi && \
     conda list python | grep '^python ' | tr -s ' ' | cut -d '.' -f 1,2 | sed 's/$/.*/' >> $CONDA_DIR/conda-meta/pinned && \
     conda install --quiet --yes conda && \

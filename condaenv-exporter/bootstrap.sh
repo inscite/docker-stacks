@@ -32,15 +32,20 @@ fi
 if [ "${EXPORTMODE}" == "VERIFY" ]; then
     ${EXECMD} "${CONDAEVAL};"'conda create --clone "$SRCENVNAME" -p /opt/conda/pubenvs/"${DSTENVNAME}";' $NB_USER
     ${EXECMD} "${CONDAEVAL};python /opt/condaenv-export-validation.py ${SRCENVNAME} ${DSTENVNAME};" $NB_USER
+    ${EXECMD} "find /opt/conda/pubenvs/${DSTENVNAME} -type f | parallel --no-notice 'rm -f {};'" $NB_USER
+    #${EXECMD} "find /opt/conda/pubenvs/${DSTENVNAME} -type d | parallel --no-notice 'rm -rf {};' >/dev/null 2>&1 || true" $NB_USER
+    #${EXECMD} "find /opt/conda/pubenvs/${DSTENVNAME} | parallel --no-notice 'rm -rf {};'" $NB_USER # worst
     ${EXECMD} "rm -rf /opt/conda/pubenvs/${DSTENVNAME};" $NB_USER
 elif [ "${EXPORTMODE}" == "EXPORT" ]; then
-    ${EXECMD} "${CONDAEVAL};"'ls -alh /opt/conda/pubenvs/;df -h;conda create --clone "$SRCENVNAME" -p /opt/conda/pubenvs/"${DSTENVNAME}";' $NB_USER
+    ${EXECMD} "${CONDAEVAL};"'conda create --clone "$SRCENVNAME" -p /opt/conda/pubenvs/"${DSTENVNAME}";' $NB_USER
 elif [ "${EXPORTMODE}" == "QUERYENVS" ]; then
     ${EXECMD} "${CONDAEVAL};python /opt/condaenv-adapter.py conda env list;" $NB_USER
 elif [ "${EXPORTMODE}" == "QUERYPKGS" ]; then
     ${EXECMD} "${CONDAEVAL};python /opt/condaenv-adapter.py conda list -n ${SRCENVNAME};" $NB_USER
 elif [ "${EXPORTMODE}" == "WETRUN" ]; then
     ${EXECMD} "${CONDAEVAL};conda activate ${SRCENVNAME};LOGFILE="${LOGFILE}" python /opt/condaenv-adapter.py "'${WETRUNARGS};' $NB_USER
+elif [ "${EXPORTMODE}" == "MOUNTINFO" ]; then
+    ${EXECMD} "${CONDAEVAL};"'ls -alh /opt/conda/pubenvs/;df -h;";' $NB_USER
 else
     echo 
 fi
