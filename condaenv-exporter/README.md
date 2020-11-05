@@ -81,3 +81,29 @@ $ condaenv-exporter.sh xo 606200001 606300000 QUERYPKGS meta02
 # command substitution of condaenv meta02 with username xo (uid: 606200001, gid: 606300000)
 $ condaenv-exporter.sh xo 606200001 606300000 WETRUN meta02 - "python -V"
 ```
+
+---
+##Revisions
+* 0.3.3 **(latest)** #78cdad30 : multi-threaded tasking in conda internals and clean-up
+* 0.3.2 *(bypass)* #1a50be5a : multi-threaded tasking in conda internals
+* 0.3 (baseline) #08b0346b : baseline for beta showcase
+---
+##Only for fun
+###  Launch demo condaenv-exporter instance with current user
+```console
+./condaenv-exporter.sh $(whoami) $(id -u) $(id -g) VERIFY <srcenvname> <dstenvname>
+```
+### Get log of launched pods
+```console
+kubectl logs -f $(kubectl describe job condaenv-exporter | grep Created | tr -s ' ' | cut -d' ' -f8)
+```
+### Remove specific c8s image on current node
+```console
+docker rmi <registry>/dataon.kr/condaenv-exporter:<version>
+```
+
+### Rebuild specific c8s image
+```console
+docker build -t <registry>/dataon.kr/condaenv-exporter:<version> --no-cache .
+docker push <registry>/dataon.kr/condaenv-exporter:<version>
+```
