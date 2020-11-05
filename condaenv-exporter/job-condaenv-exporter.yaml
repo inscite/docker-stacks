@@ -7,7 +7,7 @@ spec:
     spec:
       containers:
       - name: condaenv-exporter
-        image: kisti.rdp/dataon.kr/condaenv-exporter:0.3
+        image: kisti.rdp/dataon.kr/condaenv-exporter:0.3.2
         volumeMounts:
         - name: conda-pubenvs
           mountPath: /opt/conda/pubenvs
@@ -34,6 +34,10 @@ spec:
           value: $WETRUNARGS
         - name: LOGFILE
           value: $WETRUNLOGF
+        - name: LAP
+          value: "TRUE"
+        - name: CONDA_DEFAULT_THREADS
+          value: "10"
       volumes:
       - name: conda-pubenvs
         hostPath:
