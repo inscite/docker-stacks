@@ -86,7 +86,7 @@ $ condaenv-exporter.sh xo 606200001 606300000 WETRUN meta02 - "python -V"
 ```
 
 ---
-##Revisions
+## Revisions
 * 0.3.4 **(latest)** 501db9c : revision for strict folder elimination while condaenv verification
 * 0.3.3 281d463 : multi-threaded tasking in conda internals and clean-up
 * 0.3.2 *(bypass)* 1a50be5a : multi-threaded tasking in conda internals
