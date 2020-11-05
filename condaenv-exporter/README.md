@@ -18,13 +18,13 @@ condaenv-exporter.sh -> job-condaenv-exporter.yaml -> | k8s-cluster | -> bootstr
 
 ```console
 # fresh build of container image
-$ docker build -t kisti.rdp/dataon.kr/condaenv-exporter:0.3.3 --no-cache .
+$ docker build -t kisti.rdp/dataon.kr/condaenv-exporter:0.3.4 --no-cache .
 
 # apply container image on localhost docker
-$ docker push kisti.rdp/dataon.kr/condaenv-exporter:0.3.3
+$ docker push kisti.rdp/dataon.kr/condaenv-exporter:0.3.4
 
 # optional: container image dump
-$ docker save -o condaenv-exporter_0_3_3.tar kisti.rdp/dataon.kr/condaenv-exporter:0.3.3
+$ docker save -o condaenv-exporter_0_3_3.tar kisti.rdp/dataon.kr/condaenv-exporter:0.3.4
 
 # optional: loading dumped container image
 $ docker load < condaenv-exporter_0_3_3.tar
@@ -87,9 +87,10 @@ $ condaenv-exporter.sh xo 606200001 606300000 WETRUN meta02 - "python -V"
 
 ---
 ##Revisions
-* 0.3.3 **(latest)** #281d463 : multi-threaded tasking in conda internals and clean-up
-* 0.3.2 *(bypass)* #1a50be5a : multi-threaded tasking in conda internals
-* 0.3 (baseline) #08b0346b : baseline for beta showcase
+* 0.3.4 **(latest)** 501db9c : revision for strict folder elimination while condaenv verification
+* 0.3.3 281d463 : multi-threaded tasking in conda internals and clean-up
+* 0.3.2 *(bypass)* 1a50be5a : multi-threaded tasking in conda internals
+* 0.3 (baseline) 08b0346b : baseline for beta showcase
 ---
 ##Only for fun
 ###  Launch demo condaenv-exporter instance with current user
@@ -109,4 +110,9 @@ docker rmi <registry>/dataon.kr/condaenv-exporter:<version>
 ```console
 docker build -t <registry>/dataon.kr/condaenv-exporter:<version> --no-cache .
 docker push <registry>/dataon.kr/condaenv-exporter:<version>
+```
+
+#### Re-tag c8s image
+```console
+docker image tag <registryA>/dataon.kr/condaenv-exporter:<version> <registryB>/dataon.kr/condaenv-exporter:<version>
 ```
