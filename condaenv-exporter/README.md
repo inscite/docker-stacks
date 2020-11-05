@@ -24,10 +24,10 @@ $ docker build -t kisti.rdp/dataon.kr/condaenv-exporter:0.3.4 --no-cache .
 $ docker push kisti.rdp/dataon.kr/condaenv-exporter:0.3.4
 
 # optional: container image dump
-$ docker save -o condaenv-exporter_0_3_3.tar kisti.rdp/dataon.kr/condaenv-exporter:0.3.4
+$ docker save -o condaenv-exporter_0_3_4.tar kisti.rdp/dataon.kr/condaenv-exporter:0.3.4
 
 # optional: loading dumped container image
-$ docker load < condaenv-exporter_0_3_3.tar
+$ docker load < condaenv-exporter_0_3_4.tar
 ```
 
 ## how-to-use
