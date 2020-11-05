@@ -18,16 +18,16 @@ condaenv-exporter.sh -> job-condaenv-exporter.yaml -> | k8s-cluster | -> bootstr
 
 ```console
 # fresh build of container image
-$ docker build -t <docker-registry>/dataon.kr/condaenv-exporter:0.2 --no-cache .
+$ docker build -t kisti.rdp/dataon.kr/condaenv-exporter:0.3.3 --no-cache .
 
 # apply container image on localhost docker
-$ docker push <docker-registry>/dataon.kr/condaenv-exporter:0.2
+$ docker push kisti.rdp/dataon.kr/condaenv-exporter:0.3.3
 
 # optional: container image dump
-$ docker save -o condaenv-exporter_0_2.tar <docker-registry>/dataon.kr/condaenv-exporter:0.2
+$ docker save -o condaenv-exporter_0_3_3.tar kisti.rdp/dataon.kr/condaenv-exporter:0.3.3
 
 # optional: loading dumped container image
-$ docker load < condaenv-exporter_0_2.tar
+$ docker load < condaenv-exporter_0_3_3.tar
 ```
 
 ## how-to-use
