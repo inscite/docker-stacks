@@ -48,6 +48,9 @@ $ condaenv-exporter.sh <SU_USR> <SU_UID> <SU_GID> <EXPORTMODE> <SRCENVNAME> <DST
 * **SRCENVNAME**: source condaenv name
 * **DSTENVNAME**: destination condaenv name (for environment export)
 * **WETRUNARGS**: arguments for user-condaenv substitution **(only used for EXPORTMODE: WETRUN)**
+* **LOGFILE**: destination for logfile as a result of **WETRUN**
+* **LAP**: debug flag for benchmarking each execution of condaenv-exporter (TRUE or FALSE, default:FALSE)
+* **CONDA_DEFAULT_THREADS**: number of conda internal threadpool size (default: 10)
 
 **Example: EXPORTMODE/VERIFY**
 
@@ -84,7 +87,7 @@ $ condaenv-exporter.sh xo 606200001 606300000 WETRUN meta02 - "python -V"
 
 ---
 ##Revisions
-* 0.3.3 **(latest)** #78cdad30 : multi-threaded tasking in conda internals and clean-up
+* 0.3.3 **(latest)** #73e790d : multi-threaded tasking in conda internals and clean-up
 * 0.3.2 *(bypass)* #1a50be5a : multi-threaded tasking in conda internals
 * 0.3 (baseline) #08b0346b : baseline for beta showcase
 ---
