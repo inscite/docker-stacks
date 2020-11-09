@@ -18,16 +18,25 @@ condaenv-exporter.sh -> job-condaenv-exporter.yaml -> | k8s-cluster | -> bootstr
 
 ```console
 # fresh build of container image
-$ docker build -t kisti.rdp/dataon.kr/condaenv-exporter:0.3.4 --no-cache .
+$ docker build -t kisti.rdp/dataon.kr/condaenv-exporter:0.3.4 -f ./Dockerfile --no-cache .
+
+# fresh build of container image (GPU Instance-CUDA10.0)
+$ docker build -t kisti.rdp/dataon.kr/condaenv-exporter:0.3.4-cuda10.0 -f ./Dockerfile-cuda10_0 --no-cache .
 
 # apply container image on localhost docker
 $ docker push kisti.rdp/dataon.kr/condaenv-exporter:0.3.4
+# in case of gpu image,
+$ docker push kisti.rdp/dataon.kr/condaenv-exporter:0.3.4-cuda10.0
 
 # optional: container image dump
 $ docker save -o condaenv-exporter_0_3_4.tar kisti.rdp/dataon.kr/condaenv-exporter:0.3.4
+# in case of gpu image,
+$ docker save -o condaenv-exporter_0_3_4-cuda10_0.tar kisti.rdp/dataon.kr/condaenv-exporter:0.3.4-cuda10.0
 
 # optional: loading dumped container image
 $ docker load < condaenv-exporter_0_3_4.tar
+# in case of gpu image,
+# docker load -i condaenv-exporter_0_3_4-cuda10_0.tar
 ```
 
 ## how-to-use

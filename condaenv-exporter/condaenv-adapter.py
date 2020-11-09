@@ -26,7 +26,11 @@ def main():
 
             if logfile_path is not None and logfile_path != '' and logfile_path != '-':
                 with open(logfile_path, mode='w') as f:
+                    f.write("=====[STDOUT]=====\n")
                     f.write(subproc.stdout)
+                    f.flush()
+                    f.write("=====[STDERR]=====\n")
+                    f.write(subproc.stderr)
                     f.flush()
                     f.close()
         except (SubprocessError, CalledProcessError) as e:
