@@ -19,6 +19,10 @@ if [[ ! -z ${CONDA_DEFAULT_THREADS} ]]; then
     su -c "${CONDAEVAL};conda config --set default_threads ${CONDA_DEFAULT_THREADS}" $NB_USER
 fi
 
+if [ "${ENABLESSHD}" == "TRUE" ]; then
+    service ssh start
+fi
+
 # ownership take
 chown -R $NB_UID:$NB_GID /home/$NB_USER
 

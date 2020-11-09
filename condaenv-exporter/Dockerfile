@@ -19,6 +19,21 @@ ARG NB_GID="100"
 # Fix DL4006
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
+# fix SSL config for unstable firewall env
+# reference: https://gist.github.com/blockspacer/893b31e61c88f6899ffd0813111b3e41
+# apt
+RUN echo "Acquire::http::Verify-Peer \"false\";" >> /etc/apt.conf
+RUN echo "Acquire::https::Verify-Peer \"false\";" >> /etc/apt.conf
+
+RUN echo "Acquire::http::Verify-Peer \"false\";" >> /etc/apt/apt.conf.d/00proxy
+RUN echo "Acquire::https::Verify-Peer \"false\";" >> /etc/apt/apt.conf.d/00proxy
+
+# wget
+RUN echo "check-certificate = off" >> /etc/.wgetrc
+
+# curl
+RUN echo "insecure" >> /etc/.curlrc
+
 USER root
 
 # Install all OS dependencies for notebook server that starts but lacks all
