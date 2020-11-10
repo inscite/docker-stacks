@@ -166,7 +166,7 @@ RUN conda clean --all -f -y && \
 #    echo "c.IPClusterStart.controller_launcher_class = 'MPIControllerLauncher'" \
 #    >> /home/$NB_USER/.ipython/profile_mpi/ipcluster_config.py && \
     echo "colorscheme delek" >> /home/$NB_USER/.vimrc && \
-    conda init bash && \
+#    conda init bash && \
 #    conda config --prepend envs_dirs /opt/conda/pubenvs && \
 #    conda config --prepend envs_dirs /home/${NB_USER}/miniconda3/envs && \
     fix-permissions $CONDA_DIR && \
@@ -187,6 +187,8 @@ COPY chk_py_ver.py condaenv-export-validation.py condaenv-adapter.py /opt/
 # Switch back to dataon to avoid accidental container runs as root
 #USER $NB_UID
 #WORKDIR $HOME
+
+# remember, working directory is root of container
 USER root
 WORKDIR /
 
