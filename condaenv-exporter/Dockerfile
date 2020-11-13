@@ -2,10 +2,10 @@
 # Copyright (c) Seungkyun Hong. <nah@kakao.com>
 # Distributed under the terms of the Modified BSD License.
 
-# Ubuntu 20.04 (focal)
-# https://hub.docker.com/_/ubuntu/?tab=tags&name=focal
+# Ubuntu 18.04 (bionic)
+# https://hub.docker.com/_/ubuntu/?tab=tags&name=bionic
 # OS/ARCH: linux/amd64
-ARG ROOT_CONTAINER=ubuntu:focal-20200606@sha256:93fd0705706e5bdda6cc450b384d8d5afb18fecc19e054fe3d7a2c8c2aeb2c83
+ARG ROOT_CONTAINER=ubuntu:bionic-20200921
 ARG BASE_CONTAINER=$ROOT_CONTAINER
 FROM $BASE_CONTAINER
 
