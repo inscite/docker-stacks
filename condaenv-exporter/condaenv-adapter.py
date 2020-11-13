@@ -1,4 +1,5 @@
 import os
+import signal
 import sys
 from subprocess import run as sprun, PIPE as spPIPE, CalledProcessError, SubprocessError, TimeoutExpired
 from functools import partial
@@ -6,6 +7,12 @@ from functools import partial
 """Copyright (c) 2020 Seungkyun Hong. <nah@kakao.com>
    Distributed under the terms of the 3-Clause BSD License.
 """
+
+
+def sig_handler(signum, frame):
+    # fin
+    sys.exit(0)
+    return
 
 
 def main():
@@ -17,7 +24,19 @@ def main():
         logfile_path = None
     print("os.environ['LOGFILE']: {:}".format(logfile_path))
 
-    # subproc_result = None
+    # handling current pid of wrapper
+    pid = os.getpid()
+    print("PID: {:d}".format(pid))
+    with open('/var/run/wetrun.pid', 'w') as f:
+        f.write("{:d}".format(pid))
+        f.flush()
+        f.close()
+
+    # set sigkill handling as main thread termination
+    t_signals = (signal.SIGHUP, signal.SIGINT, signal.SIGTERM) # code 1, 2, 15
+    for t_sig in t_signals:
+        signal.signal(t_sig, sig_handler)
+
     if len(sys.argv) > 1:
         try:
             fn_subproc = partial(sprun, check=True, stdout=spPIPE, stderr=spPIPE, encoding='UTF-8')
@@ -42,7 +61,7 @@ def main():
     else:
         pass
 
-    sys.exit(0)
+    return
 
 
 if __name__ == "__main__":

@@ -165,7 +165,5 @@ USER root
 WORKDIR /
 
 # Configure container startup
-# tini is for debugging purpose
-#ENTRYPOINT ["tini", "-g", "--"]
-ENTRYPOINT ["/bin/bash"]
+ENTRYPOINT ["tini", "-g", "--"]
 CMD ["bootstrap.sh"]

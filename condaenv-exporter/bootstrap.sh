@@ -62,6 +62,8 @@ elif [ "${EXPORTMODE}" == "WETRUN" ]; then
     else
         CONDA_ACTIVATE=""
     fi
+    PIDFILE=/var/run/wetrun.pid
+    touch $PIDFILE && chown $NB_USER $PIDFILE
     ${EXECMD} "${CONDAEVAL}${CONDA_ACTIVATE}LOGFILE="${LOGFILE}" python /opt/condaenv-adapter.py "'${WETRUNARGS};' $NB_USER
 elif [ "${EXPORTMODE}" == "MOUNTINFO" ]; then
     ${EXECMD} "${CONDAEVAL}"'ls -alh /opt/conda/pubenvs/;df -h;";' $NB_USER

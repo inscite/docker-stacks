@@ -6,8 +6,6 @@
 # https://hub.docker.com/_/ubuntu/?tab=tags&name=focal
 # OS/ARCH: linux/amd64
 ARG ROOT_CONTAINER=ubuntu:focal-20200606@sha256:93fd0705706e5bdda6cc450b384d8d5afb18fecc19e054fe3d7a2c8c2aeb2c83
-#ARG ROOT_CONTAINER=centos:7@sha256:fe2347002c630d5d61bf2f28f21246ad1c21cc6fd343e70b4cf1e5102f8711a9
-
 ARG BASE_CONTAINER=$ROOT_CONTAINER
 FROM $BASE_CONTAINER
 
@@ -36,30 +34,31 @@ RUN echo "insecure" >> /etc/.curlrc
 
 USER root
 
-# Install all OS dependencies for notebook server that starts but lacks all
-# features (e.g., download as all possible file formats)
+# Install all OS dependencies for c8s img that starts but lacks all features
+# (e.g., download as all possible file formats)
+# for hwloc, refer this: https://github.com/horovod/horovod/issues/1123
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update \
  && apt-get install -yq --no-install-recommends \
-    wget \
     bzip2 \
     ca-certificates \
-    sudo \
-    locales \
-    fonts-liberation \
+    sudo quota \
+    locales fonts-liberation time \
     run-one \
-    vim \
-    nano \
-    less \
-    openssh-server \
-    openssh-client \
-    screen \
-    htop \
-    nload \
-    quota \
-    time \
-    parallel \
+    vim nano less \
+    openssh-server openssh-client \
+    net-tools wget \
+    screen htop nload \
+    parallel openmpi-bin libopenmpi-dev \
+    libhdf5-openmpi-dev \
+    build-essential cmake manpages-dev software-properties-common \
+    gcc-4.8 g++-4.8 valgrind \
+    hwloc libhwloc-dev libjemalloc1 libjemalloc-dev \
  && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# gcc alternatives set-up
+RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 60 --slave /usr/bin/g++ g++ /usr/bin/g++-4.8 \
+ && update-alternatives --config gcc
 
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
     locale-gen
@@ -113,10 +112,7 @@ ENV MINICONDA_VERSION=4.8.3 \
     CONDA_VERSION=4.8.3
 
 WORKDIR /tmp
-#ADD ./condarepo/Miniconda3-py38_${MINICONDA_VERSION}-Linux-x86_64.sh /tmp/
-#RUN wget --quiet https://repo.continuum.io/miniconda/Miniconda3-py38_${MINICONDA_VERSION}-Linux-x86_64.sh && \
-#RUN wget --quiet --no-check-certificate https://io.zyn.kr/miniconda/Miniconda3-py38_${MINICONDA_VERSION}-Linux-x86_64.sh && \
-RUN wget --quiet --no-check-certificate https://dev.zyn.kr/miniconda/Miniconda3-py38_${MINICONDA_VERSION}-Linux-x86_64.sh && \
+RUN wget --quiet https://repo.continuum.io/miniconda/Miniconda3-py38_${MINICONDA_VERSION}-Linux-x86_64.sh && \
     echo "${MINICONDA_MD5} *Miniconda3-py38_${MINICONDA_VERSION}-Linux-x86_64.sh" | md5sum -c - && \
     /bin/bash Miniconda3-py38_${MINICONDA_VERSION}-Linux-x86_64.sh -f -b -p $CONDA_DIR && \
     rm Miniconda3-py38_${MINICONDA_VERSION}-Linux-x86_64.sh && \
@@ -149,51 +145,25 @@ RUN conda install --quiet --yes 'tini=0.18.0' && \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
 
-#RUN conda install --quiet --yes \
-#    'notebook=6.0.3' \
-#    'jupyterhub=1.1.0' \
-#    'jupyterlab=2.1.5' \
-#    'openmpi=4.0.4' \
-#    'nb_conda_kernels' && \
-#    conda clean --all -f -y && \
+# conda clean-up
 RUN conda clean --all -f -y && \
-#    npm cache clean --force && \
-#    jupyter notebook --generate-config && \
-#    rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
     rm -rf /home/$NB_USER/.cache/yarn && \
 #    pip install -q ipyparallel && \
 #    ipython profile create --parallel --profile=mpi && \
 #    echo "c.IPClusterStart.controller_launcher_class = 'MPIControllerLauncher'" \
 #    >> /home/$NB_USER/.ipython/profile_mpi/ipcluster_config.py && \
     echo "colorscheme delek" >> /home/$NB_USER/.vimrc && \
-#    conda init bash && \
-#    conda config --prepend envs_dirs /opt/conda/pubenvs && \
-#    conda config --prepend envs_dirs /home/${NB_USER}/miniconda3/envs && \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
 
-#EXPOSE 8888
-
 # Copy local files as late as possible to avoid cache busting
-#COPY start.sh start-cmd.sh /usr/local/bin/
 COPY bootstrap.sh /usr/local/bin/
 COPY chk_py_ver.py condaenv-export-validation.py condaenv-adapter.py /opt/
-#COPY jupyter_notebook_config.py /etc/jupyter/
-
-# Fix permissions on /etc/jupyter as root
-#USER root
-#RUN fix-permissions /etc/jupyter/
-
-# Switch back to dataon to avoid accidental container runs as root
-#USER $NB_UID
-#WORKDIR $HOME
 
 # remember, working directory is root of container
 USER root
 WORKDIR /
 
 # Configure container startup
-# tini is for debugging purpose
-#ENTRYPOINT ["tini", "-g", "--"]
-ENTRYPOINT ["/bin/bash"]
+ENTRYPOINT ["tini", "-g", "--"]
 CMD ["bootstrap.sh"]
