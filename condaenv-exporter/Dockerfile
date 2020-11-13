@@ -40,7 +40,7 @@ USER root
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update \
  && apt-get install -yq --no-install-recommends \
-    bzip2 \
+    bzip2 pigz \
     ca-certificates \
     sudo quota \
     locales fonts-liberation time \
