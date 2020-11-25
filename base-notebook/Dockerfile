@@ -14,6 +14,8 @@ ARG NB_USER="dataon"
 ARG NB_UID="1000"
 ARG NB_GID="100"
 
+ARG TIMEZONE="Asia/Seoul"
+
 # Fix DL4006
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
@@ -43,7 +45,7 @@ RUN apt-get update \
     bzip2 pigz \
     ca-certificates \
     sudo quota \
-    locales fonts-liberation time \
+    locales fonts-liberation time tzdata \
     run-one \
     vim nano less \
     openssh-server openssh-client \
@@ -52,16 +54,19 @@ RUN apt-get update \
     parallel openmpi-bin libopenmpi-dev \
     libhdf5-openmpi-dev \
     build-essential cmake manpages-dev software-properties-common \
-    gcc-4.8 g++-4.8 valgrind \
-    hwloc libhwloc-dev libjemalloc1 libjemalloc-dev \
+#    gcc-4.8 g++-4.8 \
+    valgrind hwloc libhwloc-dev libjemalloc1 libjemalloc-dev \
  && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # gcc alternatives set-up
-RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 60 --slave /usr/bin/g++ g++ /usr/bin/g++-4.8 \
- && update-alternatives --config gcc
+#RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 60 --slave /usr/bin/g++ g++ /usr/bin/g++-4.8 \
+# && update-alternatives --config gcc
 
+# locale & timezone setup
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
-    locale-gen
+    locale-gen && \
+    ln -sf /usr/share/zoneinfo/"$TIMEZONE" /etc/localtime && \
+    readlink -f /etc/localtime
 
 # Configure environment
 ENV CONDA_DIR=/opt/conda \
@@ -116,6 +121,10 @@ RUN wget --quiet https://repo.continuum.io/miniconda/Miniconda3-py38_${MINICONDA
     echo "${MINICONDA_MD5} *Miniconda3-py38_${MINICONDA_VERSION}-Linux-x86_64.sh" | md5sum -c - && \
     /bin/bash Miniconda3-py38_${MINICONDA_VERSION}-Linux-x86_64.sh -f -b -p $CONDA_DIR && \
     rm Miniconda3-py38_${MINICONDA_VERSION}-Linux-x86_64.sh && \
+    conda update -n base -c defaults --quiet --yes conda && \
+    conda update -n base -c defaults --quiet --yes pip && \
+    export CONDA_VERSION=$(conda -V | cut -d' ' -f2) && \
+    export MINICONDA_VERSION=$CONDA_VERSION && \
     echo "conda ${CONDA_VERSION}" >> $CONDA_DIR/conda-meta/pinned && \
     conda config --system --prepend channels conda-forge && \
     conda config --system --set auto_update_conda false && \
@@ -156,7 +165,6 @@ RUN conda install --quiet --yes \
     'notebook=6.0.3' \
     'jupyterhub=1.1.0' \
     'jupyterlab=2.1.5' \
-#    'openmpi=4.0.4' \
     'nb_conda_kernels' && \
     conda clean --all -f -y && \
     npm cache clean --force && \
@@ -170,7 +178,7 @@ RUN conda install --quiet --yes \
     echo "colorscheme delek" >> /home/$NB_USER/.vimrc && \
     conda init bash && \
     fix-permissions $CONDA_DIR && \
-    fix-permissions /home/$NB_USER 
+    fix-permissions /home/$NB_USER
 
 EXPOSE 8888
 

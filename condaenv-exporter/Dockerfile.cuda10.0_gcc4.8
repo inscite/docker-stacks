@@ -2,10 +2,10 @@
 # Copyright (c) Seungkyun Hong. <nah@kakao.com>
 # Distributed under the terms of the Modified BSD License.
 
-# Ubuntu 18.04 (bionic)
-# https://hub.docker.com/_/ubuntu/?tab=tags&name=bionic
+# Ubuntu 18.04 (bionic) + NVIDIA CUDA 10.0 with runtime libraries (cuDNN/NCCL)
+# https://hub.docker.com/r/nvidia/cuda/tags?name=10.0-cudnn7-runtime-ubuntu18.04
 # OS/ARCH: linux/amd64
-ARG ROOT_CONTAINER=ubuntu:bionic-20200921
+ARG ROOT_CONTAINER=nvidia/cuda:10.0-cudnn7-runtime-ubuntu18.04
 ARG BASE_CONTAINER=$ROOT_CONTAINER
 FROM $BASE_CONTAINER
 
@@ -54,13 +54,13 @@ RUN apt-get update \
     parallel openmpi-bin libopenmpi-dev \
     libhdf5-openmpi-dev \
     build-essential cmake manpages-dev software-properties-common \
-#    gcc-4.8 g++-4.8 \
+    gcc-4.8 g++-4.8 \
     valgrind hwloc libhwloc-dev libjemalloc1 libjemalloc-dev \
  && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # gcc alternatives set-up
-#RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 60 --slave /usr/bin/g++ g++ /usr/bin/g++-4.8 \
-# && update-alternatives --config gcc
+RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 60 --slave /usr/bin/g++ g++ /usr/bin/g++-4.8 \
+ && update-alternatives --config gcc
 
 # locale & timezone setup
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \

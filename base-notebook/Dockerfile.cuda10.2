@@ -2,10 +2,10 @@
 # Copyright (c) Seungkyun Hong. <nah@kakao.com>
 # Distributed under the terms of the Modified BSD License.
 
-# Ubuntu 18.04 (bionic)
-# https://hub.docker.com/_/ubuntu/?tab=tags&name=bionic
+# Ubuntu 18.04 (bionic) + NVIDIA CUDA 10.2 with runtime libraries (cuDNN/NCCL)
+# https://hub.docker.com/r/nvidia/cuda/tags?name=10.2-cudnn7-runtime-ubuntu18.04
 # OS/ARCH: linux/amd64
-ARG ROOT_CONTAINER=ubuntu:bionic-20200921
+ARG ROOT_CONTAINER=nvidia/cuda:10.2-cudnn7-runtime-ubuntu18.04
 ARG BASE_CONTAINER=$ROOT_CONTAINER
 FROM $BASE_CONTAINER
 
@@ -154,25 +154,47 @@ RUN conda install --quiet --yes 'tini=0.18.0' && \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
 
-# conda clean-up
-RUN conda clean --all -f -y && \
+# Install Jupyter Notebook, Lab, and Hub
+# Generate a notebook server config
+# Cleanup temporary files
+# Correct permissions
+# Do all this in a single RUN command to avoid duplicating all of the
+# files across image layers when the permissions change
+# refer this for ipyparall enable: https://ipyparallel.readthedocs.io/en/latest/index.html?highlight=serverextension#installing-ipython-parallel
+RUN conda install --quiet --yes \
+    'notebook=6.0.3' \
+    'jupyterhub=1.1.0' \
+    'jupyterlab=2.1.5' \
+    'nb_conda_kernels' && \
+    conda clean --all -f -y && \
+    npm cache clean --force && \
+    jupyter notebook --generate-config && \
+    rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
     rm -rf /home/$NB_USER/.cache/yarn && \
-#    pip install -q ipyparallel && \
-#    ipython profile create --parallel --profile=mpi && \
-#    echo "c.IPClusterStart.controller_launcher_class = 'MPIControllerLauncher'" \
-#    >> /home/$NB_USER/.ipython/profile_mpi/ipcluster_config.py && \
+    pip install -q ipyparallel && \
+    ipython profile create --parallel --profile=mpi && \
+    echo "c.IPClusterStart.controller_launcher_class = 'MPIControllerLauncher'" \
+    >> /home/$NB_USER/.ipython/profile_mpi/ipcluster_config.py && \
     echo "colorscheme delek" >> /home/$NB_USER/.vimrc && \
+    conda init bash && \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
 
-# Copy local files as late as possible to avoid cache busting
-COPY bootstrap.sh /usr/local/bin/
-COPY chk_py_ver.py condaenv-export-validation.py condaenv-adapter.py /opt/
-
-# remember, working directory is root of container
-USER root
-WORKDIR /
+EXPOSE 8888
 
 # Configure container startup
 ENTRYPOINT ["tini", "-g", "--"]
-CMD ["bootstrap.sh"]
+CMD ["start-notebook.sh"]
+
+# Copy local files as late as possible to avoid cache busting
+COPY start.sh start-notebook.sh start-singleuser.sh /usr/local/bin/
+COPY jupyter_notebook_config.py /etc/jupyter/
+
+# Fix permissions on /etc/jupyter as root
+USER root
+RUN fix-permissions /etc/jupyter/
+
+# Switch back to dataon to avoid accidental container runs as root
+USER $NB_UID
+
+WORKDIR $HOME

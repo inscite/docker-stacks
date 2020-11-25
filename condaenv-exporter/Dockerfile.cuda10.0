@@ -2,10 +2,10 @@
 # Copyright (c) Seungkyun Hong. <nah@kakao.com>
 # Distributed under the terms of the Modified BSD License.
 
-# Ubuntu 18.04 (bionic)
-# https://hub.docker.com/_/ubuntu/?tab=tags&name=bionic
+# Ubuntu 18.04 (bionic) + NVIDIA CUDA 10.0 with runtime libraries (cuDNN/NCCL)
+# https://hub.docker.com/r/nvidia/cuda/tags?name=10.0-cudnn7-runtime-ubuntu18.04
 # OS/ARCH: linux/amd64
-ARG ROOT_CONTAINER=ubuntu:bionic-20200921
+ARG ROOT_CONTAINER=nvidia/cuda:10.0-cudnn7-runtime-ubuntu18.04
 ARG BASE_CONTAINER=$ROOT_CONTAINER
 FROM $BASE_CONTAINER
 
