@@ -1,7 +1,7 @@
 import os
 import signal
 import sys
-from subprocess import run as sprun, PIPE as spPIPE, CalledProcessError, SubprocessError, TimeoutExpired
+from subprocess import Popen, PIPE as spPIPE, STDOUT as spSTDOUT, CalledProcessError, SubprocessError, TimeoutExpired
 from functools import partial
 
 """Copyright (c) 2020 Seungkyun Hong. <nah@kakao.com>
@@ -39,25 +39,50 @@ def main():
 
     if len(sys.argv) > 1:
         try:
-            fn_subproc = partial(sprun, check=True, stdout=spPIPE, stderr=spPIPE, encoding='UTF-8')
+            fn_subproc = partial(Popen, stdout=spPIPE, stderr=spSTDOUT, encoding='UTF-8')
             subproc_result = fn_subproc(sys.argv[1:])
-
+            callfail = False
         except (CalledProcessError, SubprocessError, TimeoutExpired) as e:
             print("[E] error occurred while running:\nExec: {:}\n{:}".format(str(sys.argv[1:]), str(e)))
             subproc_result = e
-
-        print("[D] STDOUT:\n{:}".format(subproc_result.stdout))
-        print("[D] STDERR:\n{:}".format(subproc_result.stderr))
+            callfail = False
+        except OSError as e:
+            subproc_result = str(e)
+            callfail = True
 
         if logfile_path is not None and logfile_path != '' and logfile_path != '-':
-            with open(logfile_path, mode='w') as f:
-                f.write("=====[STDOUT]=====\n")
-                f.write(subproc_result.stdout)
-                f.flush()
-                f.write("=====[STDERR]=====\n")
-                f.write(subproc_result.stderr)
-                f.flush()
-                f.close()
+            try:
+                with open(logfile_path, mode='w') as f:
+                    if not callfail:
+                        comm = subproc_result  # Popen.communicate()
+                        # only for valid spawned process which was executed by all means
+                        for comm_stdout_inst in comm.stdout:
+                            f.write(comm_stdout_inst)
+                            f.flush()
+                    else:
+                        # the process was not spawned
+                        f.write(subproc_result + '\n')
+                        f.flush()
+                    f.flush()
+                    f.close()
+            except Exception as e:
+                # reserved for further exception handling
+                pass
+        else:
+            pass
+
+        # print("[D] STDOUT:\n{:}".format(subproc_result.stdout))
+        # print("[D] STDERR:\n{:}".format(subproc_result.stderr))
+        #
+        # if logfile_path is not None and logfile_path != '' and logfile_path != '-':
+        #     with open(logfile_path, mode='w') as f:
+        #         f.write("=====[STDOUT]=====\n")
+        #         f.write(subproc_result.stdout)
+        #         f.flush()
+        #         f.write("=====[STDERR]=====\n")
+        #         f.write(subproc_result.stderr)
+        #         f.flush()
+        #         f.close()
     else:
         pass
 
