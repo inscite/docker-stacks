@@ -107,12 +107,11 @@ ARG PYTHON_VERSION=default
 #    fix-permissions /home/$NB_USER
 
 # Install conda as dataon and check the md5 sum provided on the download site
-ENV MINICONDA_VERSION=4.8.3 \
-    MINICONDA_MD5=d63adf39f2c220950a063e0529d4ff74 \
-    CONDA_VERSION=4.8.3
-
 WORKDIR /tmp
-RUN wget --quiet https://repo.continuum.io/miniconda/Miniconda3-py38_${MINICONDA_VERSION}-Linux-x86_64.sh && \
+RUN MINICONDA_VERSION=4.8.3 \
+    MINICONDA_MD5=d63adf39f2c220950a063e0529d4ff74 \
+    CONDA_VERSION=4.8.3 \
+    wget --quiet https://repo.continuum.io/miniconda/Miniconda3-py38_${MINICONDA_VERSION}-Linux-x86_64.sh && \
     echo "${MINICONDA_MD5} *Miniconda3-py38_${MINICONDA_VERSION}-Linux-x86_64.sh" | md5sum -c - && \
     /bin/bash Miniconda3-py38_${MINICONDA_VERSION}-Linux-x86_64.sh -f -b -p $CONDA_DIR && \
     rm Miniconda3-py38_${MINICONDA_VERSION}-Linux-x86_64.sh && \
@@ -145,48 +144,3 @@ RUN conda install --quiet --yes 'tini=0.18.0' && \
     conda clean --all -f -y && \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
-
-# Install Jupyter Notebook, Lab, and Hub
-# Generate a notebook server config
-# Cleanup temporary files
-# Correct permissions
-# Do all this in a single RUN command to avoid duplicating all of the
-# files across image layers when the permissions change
-# refer this for ipyparall enable: https://ipyparallel.readthedocs.io/en/latest/index.html?highlight=serverextension#installing-ipython-parallel
-RUN conda install --quiet --yes \
-    'notebook=6.0.3' \
-    'jupyterhub=1.1.0' \
-    'jupyterlab=2.1.5' \
-    'nb_conda_kernels' && \
-    conda clean --all -f -y && \
-    npm cache clean --force && \
-    jupyter notebook --generate-config && \
-    rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
-    rm -rf /home/$NB_USER/.cache/yarn && \
-    pip install -q ipyparallel && \
-    ipython profile create --parallel --profile=mpi && \
-    echo "c.IPClusterStart.controller_launcher_class = 'MPIControllerLauncher'" \
-    >> /home/$NB_USER/.ipython/profile_mpi/ipcluster_config.py && \
-    echo "colorscheme delek" >> /home/$NB_USER/.vimrc && \
-    conda init bash && \
-    fix-permissions $CONDA_DIR && \
-    fix-permissions /home/$NB_USER
-
-EXPOSE 8888
-
-# Configure container startup
-ENTRYPOINT ["tini", "-g", "--"]
-CMD ["start-notebook.sh"]
-
-# Copy local files as late as possible to avoid cache busting
-COPY start.sh start-notebook.sh start-singleuser.sh /usr/local/bin/
-COPY jupyter_notebook_config.py /etc/jupyter/
-
-# Fix permissions on /etc/jupyter as root
-USER root
-RUN fix-permissions /etc/jupyter/
-
-# Switch back to jovyan to avoid accidental container runs as root
-USER $NB_UID
-
-WORKDIR $HOME
