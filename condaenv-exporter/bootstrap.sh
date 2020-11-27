@@ -6,7 +6,7 @@
 groupadd -g $NB_GID $NB_USER
 useradd -u $NB_UID -g $NB_GID $NB_USER -s /bin/bash
 usermod -aG 100 $NB_USER
-cp -R /home/dataon /home/$NB_USER
+cp -R /home/jovyan /home/$NB_USER
 chown -R $NB_UID:$NB_GID /home/$NB_USER
 
 CONDAEVAL='eval "$(/opt/conda/bin/conda shell.bash hook)";'
