@@ -16,3 +16,5 @@
 # cuda 10.2 images
 #docker build --no-cache -t inscite/base-conda:0.4-cuda10.2 -f ./Dockerfile.cuda10.2 .
 #docker build --no-cache -t inscite/base-conda:0.4-cuda10.2-gcc4.8 -f ./Dockerfile.cuda10.2_gcc4.8 .
+
+docker images | grep inscite/base-conda | grep 0.4
