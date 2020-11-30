@@ -4,7 +4,7 @@
 # Distributed under the terms of the 3-Clause BSD License.
 
 # condaenv-exporter launcher
-# req. container: dataon.kr/condaenv-exporter:0.2
+# req. container: inscite/condaenv-exporter:0.4
 
 export SU_USR=$1
 export SU_UID=$2

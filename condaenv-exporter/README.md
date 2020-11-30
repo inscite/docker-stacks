@@ -18,20 +18,20 @@ condaenv-exporter.sh -> job-condaenv-exporter.yaml -> | k8s-cluster | -> bootstr
 
 ```console
 # fresh build of container image
-$ docker build -t kisti.rdp/dataon.kr/condaenv-exporter:0.3.4 -f ./Dockerfile --no-cache .
+$ docker build -t inscite/condaenv-exporter:0.3.4 -f ./Dockerfile --no-cache .
 
 # fresh build of container image (GPU Instance-CUDA10.0)
-$ docker build -t kisti.rdp/dataon.kr/condaenv-exporter:0.3.4-cuda10.0 -f ./Dockerfile.cuda10_0 --no-cache .
+$ docker build -t inscite/condaenv-exporter:0.3.4-cuda10.0 -f ./Dockerfile.cuda10_0 --no-cache .
 
 # apply container image on localhost docker
-$ docker push kisti.rdp/dataon.kr/condaenv-exporter:0.3.4
+$ docker push inscite/condaenv-exporter:0.3.4
 # in case of gpu image,
-$ docker push kisti.rdp/dataon.kr/condaenv-exporter:0.3.4-cuda10.0
+$ docker push inscite/condaenv-exporter:0.3.4-cuda10.0
 
 # optional: container image dump
-$ docker save -o condaenv-exporter_0_3_4.tar kisti.rdp/dataon.kr/condaenv-exporter:0.3.4
+$ docker save -o condaenv-exporter_0_3_4.tar inscite/condaenv-exporter:0.3.4
 # in case of gpu image,
-$ docker save -o condaenv-exporter_0_3_4-cuda10_0.tar kisti.rdp/dataon.kr/condaenv-exporter:0.3.4-cuda10.0
+$ docker save -o condaenv-exporter_0_3_4-cuda10_0.tar inscite/condaenv-exporter:0.3.4-cuda10.0
 
 # optional: loading dumped container image
 $ docker load < condaenv-exporter_0_3_4.tar
@@ -112,16 +112,16 @@ kubectl logs -f $(kubectl describe job condaenv-exporter | grep Created | tr -s 
 ```
 ### Remove specific c8s image on current node
 ```console
-docker rmi <registry>/dataon.kr/condaenv-exporter:<version>
+docker rmi <registry>/inscite/condaenv-exporter:<version>
 ```
 
 ### Rebuild specific c8s image
 ```console
-docker build -t <registry>/dataon.kr/condaenv-exporter:<version> --no-cache .
-docker push <registry>/dataon.kr/condaenv-exporter:<version>
+docker build -t <registry>/inscite/condaenv-exporter:<version> --no-cache .
+docker push <registry>/inscite/condaenv-exporter:<version>
 ```
 
 #### Re-tag c8s image
 ```console
-docker image tag <registryA>/dataon.kr/condaenv-exporter:<version> <registryB>/dataon.kr/condaenv-exporter:<version>
+docker image tag <registryA>/inscite/condaenv-exporter:<version> <registryB>/inscite/condaenv-exporter:<version>
 ```

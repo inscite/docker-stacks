@@ -7,7 +7,7 @@ spec:
     spec:
       containers:
       - name: condaenv-exporter
-        image: kisti.rdp/dataon.kr/condaenv-exporter:0.3.4
+        image: inscite/condaenv-exporter:0.4
         volumeMounts:
         - name: conda-pubenvs
           mountPath: /opt/conda/pubenvs
@@ -41,18 +41,18 @@ spec:
       volumes:
       - name: conda-pubenvs
         hostPath:
-          path: /mnt/share/lustre/Canvas/pubs/envs
+          path: /mnt/share/pubs/envs
           type: Directory
       - name: conda-usrenvs
         hostPath:
-          path: /mnt/share/lustre/user/$SU_USR_HOME/.usrenvs
+          path: /mnt/share/user/$SU_USR_HOME/.usrenvs
           type: Directory
       - name: workspace
         hostPath:
-          path: /mnt/share/lustre/user/$SU_USR_HOME
+          path: /mnt/share/user/$SU_USR_HOME
           type: Directory
       - name: lustre
         hostPath:
-          path: /mnt/share/lustre
+          path: /mnt/lustre
           type: Directory
       restartPolicy: Never

@@ -7,7 +7,7 @@ spec:
     spec:
       containers:
       - name: condaenv-exporter
-        image: dataon.kr/condaenv-exporter:0.1
+        image: inscite/condaenv-exporter:0.4
         volumeMounts:
         - name: conda-pubenvs
           mountPath: /opt/conda/pubenvs
